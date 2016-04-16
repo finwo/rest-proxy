@@ -1,0 +1,17 @@
+{
+    "name": "finwo/rest-proxy",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Robin Bron",
+            "email": "robin@finwo.nl"
+        }
+    ],
+    "repositories": [{
+        "type": "vcs",
+        "url": "git@github.com:finwo/rest-client-php.git"
+    }],
+    "require": {
+        "finwo/rest-client": "*@dev"
+    }
+}
