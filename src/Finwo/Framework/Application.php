@@ -12,11 +12,6 @@ class Application
     protected $container;
 
     /**
-     * @var ParameterBag
-     */
-    protected $config;
-
-    /**
      * @var PropertyAccessor
      */
     protected $propertyAccessor;
@@ -37,10 +32,11 @@ class Application
         return $this->propertyAccessor;
     }
 
-    public function __construct()
+    public function __construct( ParameterBag $container = null )
     {
         // Don't do anything if we're an actual application
-        if ( get_class($this) !== 'Finwo\\Framework\\Application' ) {
+        if (!is_null($container)) {
+            $this->container = $container;
             return;
         }
 
@@ -69,10 +65,10 @@ class Application
                 $loader->loadFile($file)
             );
         }
-        $this->config = new ParameterBag($config);
+        $this->container->set('config', $config);
 
         // Check if we can do something useful with the application
-        $app = $this->getApplicationObject( $this->config->get('application') );
+        $app = $this->getApplicationObject( $this->container->get('config.application') );
         if ($app === false) {
             throw new \Exception('Application does not exist!');
         }
@@ -85,13 +81,13 @@ class Application
     {
         // Try name directly
         if (class_exists($name)) {
-            return new $name();
+            return new $name( $this->container );
         }
 
         // Try name with ending "application"
         $tryname = $name . '\\Application';
         if (class_exists($tryname)) {
-            return new $tryname();
+            return new $tryname( $this->container );
         }
 
         // Try name with double ending
@@ -100,8 +96,9 @@ class Application
         array_push($tryname, $last);
         array_push($tryname, $last);
         $tryname = implode('\\', $tryname);
+
         if (class_exists($tryname)) {
-            return new $tryname();
+            return new $tryname( $this->container );
         }
 
         return false;
@@ -109,6 +106,11 @@ class Application
 
     public function launch()
     {
-        die("I've launched");
+        // If we have a child, launch that instead
+        if( $this->app instanceof Application ) {
+            return $this->app->launch();
+        }
+
+        return 'tadaa';
     }
 }
