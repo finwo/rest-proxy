@@ -12,12 +12,6 @@
             "": "src"
         }
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@github.com:finwo/data-tools-php.git"
-        }
-    ],
     "require": {
         "mustangostang/spyc": "^0.5.1",
         "finwo/property-accessor": "*@dev",
