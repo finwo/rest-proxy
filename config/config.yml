@@ -1,0 +1,7 @@
+
+# Application class
+application: Finwo\RestProxy\RestProxy
+
+# Note of the authors
+authors:
+  - Robin Bron <robin@finwo.nl>

@@ -7,11 +7,20 @@
             "email": "robin@finwo.nl"
         }
     ],
-    "repositories": [{
-        "type": "vcs",
-        "url": "git@github.com:finwo/rest-client-php.git"
-    }],
+    "autoload": {
+        "psr-4": {
+            "": "src"
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:finwo/rest-client-php.git"
+        }
+    ],
     "require": {
-        "finwo/rest-client": "*@dev"
+        "finwo/rest-client": "*@dev",
+        "mustangostang/spyc": "^0.5.1",
+        "finwo/property-accessor": "*@dev"
     }
 }

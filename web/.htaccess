@@ -1,0 +1,3 @@
+# We'll route everything to our app
+RewriteEngine on
+RewriteRule ^(.*)$ /app.php [NC,L,QSA]
