@@ -2,7 +2,9 @@
 
 namespace Finwo\RestProxy\Controller;
 
-class DefaultController
+use Finwo\Framework\Controller;
+
+class DefaultController extends Controller
 {
     public function indexAction()
     {

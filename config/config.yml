@@ -5,3 +5,12 @@ application: Finwo\RestProxy
 # Note of the authors
 authors:
   - Robin Bron <robin@finwo.nl>
+
+routes:
+  rest_proxy:
+    type: rest
+    path: ^\/(?<resource>[a-z\/]+)(\.(?<extension>[a-z]+))?$
+#    controller: Finwo\RestProxy:Rest:get
+    method: GET
+    defaults:
+      extension: json
