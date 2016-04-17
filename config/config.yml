@@ -1,6 +1,6 @@
 
 # Application class
-application: Finwo\RestProxy\RestProxy
+application: Finwo\RestProxy
 
 # Note of the authors
 authors:

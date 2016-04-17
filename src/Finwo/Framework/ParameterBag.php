@@ -52,13 +52,13 @@ class ParameterBag
     public function set($key, $value)
     {
         $acc = $this->getAccessor();
-        $acc->set($this->parameters, $key, $value);
+        $acc->set($this->parameters, $key, $value, '.');
         return $this;
     }
 
     public function get($key)
     {
         $acc = $this->getAccessor();
-        return $acc->get($this->parameters, $key);
+        return $acc->get($this->parameters, $key, '.');
     }
 }
