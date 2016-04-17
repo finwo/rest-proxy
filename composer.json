@@ -15,12 +15,14 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "git@github.com:finwo/rest-client-php.git"
+            "url": "git@github.com:finwo/data-tools-php.git"
         }
     ],
     "require": {
-        "finwo/rest-client": "*@dev",
         "mustangostang/spyc": "^0.5.1",
-        "finwo/property-accessor": "*@dev"
+        "finwo/property-accessor": "*@dev",
+        "adoy/oauth2": "^1.3",
+        "finwo/data-tools": "dev-master",
+        "netresearch/jsonmapper": "^0.11.0"
     }
 }
