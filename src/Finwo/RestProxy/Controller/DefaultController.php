@@ -8,6 +8,6 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        return 'Hello World';
+        return __FILE__;
     }
 }

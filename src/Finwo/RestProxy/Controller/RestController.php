@@ -3,11 +3,14 @@
 namespace Finwo\RestProxy\Controller;
 
 use Finwo\Framework\RestController as BaseController;
+use Finwo\Framework\Route;
 
 class RestController extends BaseController
 {
-    public function indexAction()
+    public function getAction($resource = '', $query = array())
     {
-        return false;
+        var_dump($resource);
+        var_dump($query);
+        return;
     }
 }

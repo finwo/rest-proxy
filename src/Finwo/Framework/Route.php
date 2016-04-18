@@ -15,6 +15,7 @@ class Route extends Mappable
     protected $controller;
     protected $defaults;
     protected $prefix;
+    protected $parsedUri;
 
     // After-parse values
     protected $parameters;
@@ -34,6 +35,15 @@ class Route extends Mappable
     {
         // If this function gets called, process the request.. No sooner
 
+        // Handle path prefix
+        if(strlen($this->prefix)) {
+            if( substr($this->requestUri, 0, strlen($this->prefix)) == $this->prefix ) {
+                $this->requestUri = substr($this->requestUri, strlen($this->prefix));
+            } else {
+                return false;
+            }
+        }
+
         // Host match
         if (!is_null($this->host) && !preg_match('/' . $this->host . '/i', $this->httpHost)) {
             return false;
@@ -44,20 +54,17 @@ class Route extends Mappable
             return false;
         }
 
-        // Handle path prefix
-        if(strlen($this->prefix)) {
-            if( substr($this->requestUri, 0, strlen($this->prefix)) == $this->prefix ) {
-                $this->requestUri = substr($this->requestUri, strlen($this->prefix));
-            } else {
-                return false;
-            }
-        }
-
         // Parse the path
         $parsed = array_merge(array(
             'path' => '/',
             'query' => ''
         ), parse_url($this->requestUri));
+
+        // Store parsed uri
+        $this->parsedUri = $parsed;
+        parse_str($this->parsedUri['query'], $query);
+        $this->parsedUri['query'] = $query;
+
         if (!is_null($this->path) && !preg_match('/' . $this->path . '/i', $parsed['path'], $this->parameters)) {
             return false;
         }
@@ -71,10 +78,27 @@ class Route extends Mappable
 
         // Parse the query
         parse_str($parsed['query'], $matches);
-
         $this->parameters = array_merge((array)$this->defaults, $this->parameters, $matches);
 
         return true;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParsedUri()
+    {
+        return $this->parsedUri;
+    }
+
+    /**
+     * @param mixed $parsedUri
+     * @return Route
+     */
+    public function setParsedUri($parsedUri)
+    {
+        $this->parsedUri = $parsedUri;
+        return $this;
     }
 
     /**
