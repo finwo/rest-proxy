@@ -9,8 +9,17 @@ class RestController extends BaseController
 {
     public function getAction($resource = '', $query = array())
     {
-        var_dump($resource);
-        var_dump($query);
-        return;
+        return array(
+            'html' => array(
+                'head' => array(
+                    'I\'m fine, thank you'
+                ),
+                'body' => array(
+                    'div' => array(
+                        'How are you doing?'
+                    )
+                )
+            )
+        );
     }
 }
