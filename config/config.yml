@@ -10,7 +10,8 @@ routes:
   rest_proxy:
     type: rest
     path: ^\/(?<resource>[a-z\/]+)(\.(?<extension>[a-z]+))?$
-#    controller: Finwo\RestProxy:Rest:get
     method: GET
+    prefix: /rest
+    controller: Finwo\RestProxy:Rest:get
     defaults:
       extension: json

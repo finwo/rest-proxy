@@ -3,8 +3,9 @@
 namespace Finwo\Framework;
 
 use Finwo\PropertyAccessor\PropertyAccessor;
+use Invoker\ParameterResolver\ParameterResolver;
 
-class ParameterBag
+class ParameterBag implements ParameterResolver
 {
     /**
      * Parameters
@@ -47,6 +48,16 @@ class ParameterBag
     public function toArray()
     {
         return $this->parameters;
+    }
+
+    public function getParameters(
+        \ReflectionFunctionAbstract $reflection,
+        array $providedParameters,
+        array $resolvedParameters
+    )
+    {
+        var_dump($reflection, $providedParameters, $resolvedParameters);
+        die();
     }
 
     public function set($key, $value)

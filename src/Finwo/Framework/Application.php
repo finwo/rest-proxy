@@ -3,6 +3,7 @@
 namespace Finwo\Framework;
 
 use Finwo\PropertyAccessor\PropertyAccessor;
+use Invoker\Invoker;
 
 class Application
 {
@@ -127,29 +128,45 @@ class Application
             return $route->match();
         }));
 
-        // Start known route if possible
+        // Construct a callable
+        $controller = '';
+        $method     = '';
         if (!is_null($route)) {
-
-            // Fetch the controller
-            $callable = $this->routeToCallable($route);
-
-            var_dump($route, $callable);
-            die();
-
-            // Search for the appropriate controller
-
+            // Fetch callable for the route
+            list($controller, $method) = $this->routeToCallable($route);
         }
 
-        var_dump($route);
-        die(get_class($this));
+        // Create the controller object
+        $controller = new $controller($this->container);
+
+        // Call the function
+        $invoker = new Invoker();
+        $answer = $invoker->call(array($controller, $method), array_merge(
+            $route->getParameters(),
+            array(
+                'route'     => $route,
+                'container' => $this->container,
+                'query'     => $route->getParameters()
+            )
+        ));
+
+        var_dump($answer);
+        die();
     }
 
     protected function routeToCallable( Route $route )
     {
         @list( $namespace, $controller, $method ) = explode(':', $route->getController());
 
+        // This might introduce bugs we don't want
+//        // Add prefix to the uri if used
+        $parsedPath = $route->getParsedUri()['path'];
+//        if (strlen($prefix=$route->getPrefix())) {
+//            $parsedPath = $prefix . $parsedPath;
+//        }
+
         // Pre-fetch uri, we might need to work with it
-        $uri = explode('/', trim($route->getRequestUri(), '/'));
+        $uri = explode('/', trim($parsedPath, '/'));
 
         // Auto-detect namespace if needed
         if (is_null($namespace) || !strlen($namespace)) {
@@ -183,17 +200,65 @@ class Application
         // Merge fields into full controller class name
         $controller = sprintf("%s\\%sController", $namespace, $controller);
 
-        // Fetch proper method
+        // Fix method if needed
+        if( is_null($method) || !strlen($method) || !method_exists($controller, $method) ) {
+            $parts = $uri;
 
-        // But first, debugging
-        if(method_exists($controller, 'indexAction')) {
-            die('VICTORY!!');
-        } else {
-            die('FAILURE');
+            // Check if appending 'action' does the trick
+            if (method_exists($controller, $method . 'Action')) {
+                $method .= 'Action';
+            } else {
+                // Make sure the rest of the code catches this
+                $method = null;
+            }
+
+            if (is_null($method) || !strlen($method)) {
+                while(count($parts)) {
+                    if(method_exists($controller, ($camelized = $this->camelizedArray($parts)) . 'Action')) {
+                        $method = $camelized . 'Action';
+                        break;
+                    }
+                    array_pop($parts);
+                }
+
+            }
+
+            // Try request method
+            if (is_null($method) || !strlen($method)) {
+                if (method_exists($controller, ($m=strtolower($route->getRequestMethod())) . 'Action')) {
+                    $method = $m . 'Action';
+                }
+            }
+
+            // Try index method
+            if (is_null($method) || !strlen($method)) {
+                if (method_exists($controller, 'indexAction')) {
+                    $method = 'indexAction';
+                }
+            }
+
+            // Throw exception, we don't have a function
+            if (is_null($method) || !strlen($method)) {
+                throw new \Exception('No method for the route found');
+            }
         }
 
-        var_dump($namespace, $controller, $method);
-        var_dump($actualController);
-        return null;
+        // Fetch how to call the method (parameters etc)
+        $parameters = array();
+
+        // We're here, that means we have all the requirements
+        $chosenController = new $controller($this->container);
+
+        return array($controller,$method);
+    }
+
+    protected function camelizedArray($input) {
+        $output = lcfirst(array_shift($input));
+
+        foreach($input as $str) {
+            $output .= ucfirst($str);
+        }
+
+        return $output;
     }
 }
