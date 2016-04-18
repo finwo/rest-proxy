@@ -150,8 +150,41 @@ class Application
             )
         ));
 
-        var_dump($answer);
-        die();
+        switch($route->getType()) {
+            case 'rest':
+                // Must transform data
+
+                // Check how to transform
+                $format = null;
+                if (isset($route->getParameters()['format'])) {
+                    $format = $route->getParameters()['format'];
+                } else {
+                    preg_match('/\.(?<format>[a-z]+)\?/i', $route->getRequestUri(), $matches);
+                    if (isset($matches['format'])) {
+                        $format = $matches['format'];
+                    }
+                }
+                if (is_null($format)) {
+                    throw new \Exception('Target format not given');
+                }
+
+                switch(strtolower($format)) {
+                    case 'json':
+                        die(json_encode($answer));
+                    case 'xml':
+                        $transformer = new XmlTransformer();
+                        die($transformer->objToXML($answer));
+                    default:
+                        throw new \Exception('Target format not supported');
+                        die();
+                }
+
+                die('transform');
+            default:
+                // Must return a view
+                die('Not implemented yet');
+                break;
+        }
     }
 
     protected function routeToCallable( Route $route )
