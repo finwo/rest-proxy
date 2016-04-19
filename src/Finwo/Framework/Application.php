@@ -73,9 +73,11 @@ class Application
         // Transform routes into route objects, for easy usage
         $routes = array();
         foreach ($this->container->get('config.routes') as $name => $route) {
-            $routes[] = $route = new Route($name, $route);
-            $route->map( array_merge($_SERVER, $_REQUEST) );
-
+            $routes[] = $route = new Route($name, array_merge(
+                $_SERVER,
+                $_REQUEST,
+                $route
+            ));
         }
         $this->container->set('config.routes', $routes);
 
