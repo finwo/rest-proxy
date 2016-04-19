@@ -10,7 +10,7 @@ class Route extends Mappable
     protected $type = 'default';
     protected $name;
     protected $host;
-    protected $path;
+    protected $pattern;
     protected $method;
     protected $controller;
     protected $defaults;
@@ -35,9 +35,9 @@ class Route extends Mappable
     {
         // If this function gets called, process the request.. No sooner
 
-        // Handle path prefix
-        if(strlen($this->prefix)) {
-            if( substr($this->requestUri, 0, strlen($this->prefix)) == $this->prefix ) {
+        // Handle pattern prefix
+        if (strlen($this->prefix)) {
+            if (substr($this->requestUri, 0, strlen($this->prefix)) == $this->prefix) {
                 $this->requestUri = substr($this->requestUri, strlen($this->prefix));
             } else {
                 return false;
@@ -54,7 +54,7 @@ class Route extends Mappable
             return false;
         }
 
-        // Parse the path
+        // Parse the pattern
         $parsed = array_merge(array(
             'path' => '/',
             'query' => ''
@@ -65,7 +65,7 @@ class Route extends Mappable
         parse_str($this->parsedUri['query'], $query);
         $this->parsedUri['query'] = $query;
 
-        if (!is_null($this->path) && !preg_match('/' . $this->path . '/i', $parsed['path'], $this->parameters)) {
+        if (!is_null($this->pattern) && !preg_match('/' . $this->pattern . '/i', $parsed['path'], $this->parameters)) {
             return false;
         }
 
@@ -81,24 +81,6 @@ class Route extends Mappable
         $this->parameters = array_merge((array)$this->defaults, $this->parameters, $matches);
 
         return true;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getParsedUri()
-    {
-        return $this->parsedUri;
-    }
-
-    /**
-     * @param mixed $parsedUri
-     * @return Route
-     */
-    public function setParsedUri($parsedUri)
-    {
-        $this->parsedUri = $parsedUri;
-        return $this;
     }
 
     /**
@@ -158,18 +140,18 @@ class Route extends Mappable
     /**
      * @return mixed
      */
-    public function getPath()
+    public function getPattern()
     {
-        return $this->path;
+        return $this->pattern;
     }
 
     /**
-     * @param mixed $path
+     * @param mixed $pattern
      * @return Route
      */
-    public function setPath($path)
+    public function setPattern($pattern)
     {
-        $this->path = $path;
+        $this->pattern = $pattern;
         return $this;
     }
 
@@ -246,6 +228,42 @@ class Route extends Mappable
     }
 
     /**
+     * @return mixed
+     */
+    public function getParsedUri()
+    {
+        return $this->parsedUri;
+    }
+
+    /**
+     * @param mixed $parsedUri
+     * @return Route
+     */
+    public function setParsedUri($parsedUri)
+    {
+        $this->parsedUri = $parsedUri;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @param mixed $parameters
+     * @return Route
+     */
+    public function setParameters($parameters)
+    {
+        $this->parameters = $parameters;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getRequestUri()
@@ -296,24 +314,6 @@ class Route extends Mappable
     public function setHttpHost($httpHost)
     {
         $this->httpHost = $httpHost;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
-    }
-
-    /**
-     * @param mixed $parameters
-     * @return Route
-     */
-    public function setParameters($parameters)
-    {
-        $this->parameters = $parameters;
         return $this;
     }
 }

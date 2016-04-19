@@ -1,3 +1,8 @@
 # We'll route everything to our app
+
+DirectoryIndex app.php
+
 RewriteEngine on
-RewriteRule ^(.*)$ /app.php [NC,L,QSA]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ /app.php [NC,L]
