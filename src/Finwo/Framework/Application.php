@@ -170,8 +170,10 @@ class Application
 
                 switch(strtolower($format)) {
                     case 'json':
+                        header('Content-Type: application/json');
                         die(json_encode($answer));
                     case 'xml':
+                        header('Content-Type: application/xml');
                         $transformer = new XmlTransformer();
                         die($transformer->objToXML($answer));
                     default:

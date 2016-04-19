@@ -13,11 +13,14 @@
         }
     },
     "require": {
+        "php": ">=5.3",
+        "ext-curl": "*",
         "mustangostang/spyc": "^0.5.1",
         "finwo/property-accessor": "*@dev",
         "adoy/oauth2": "^1.3",
         "finwo/data-tools": "dev-master",
         "netresearch/jsonmapper": "^0.11.0",
-        "PHP-DI/invoker": "^1.3"
+        "PHP-DI/invoker": "^1.3",
+        "heroku/heroku-buildpack-php": "^101.0"
     }
 }
