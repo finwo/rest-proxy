@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c814a339c04f0871115f383195587509",
-    "content-hash": "fe35f3b72a442cdc02f8dea8249af7c0",
+    "hash": "ce453b17b966acdacde178bc8fc4a309",
+    "content-hash": "12553b54ec256b627a645a414f2f9c60",
     "packages": [
         {
             "name": "adoy/oauth2",
@@ -274,7 +274,7 @@
     "packages-dev": [
         {
             "name": "heroku/heroku-buildpack-php",
-            "version": "v101",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/heroku/heroku-buildpack-php.git",
@@ -321,7 +321,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "finwo/property-accessor": 20,
-        "finwo/data-tools": 20
+        "finwo/data-tools": 20,
+        "heroku/heroku-buildpack-php": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
