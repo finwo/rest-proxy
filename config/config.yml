@@ -9,7 +9,7 @@ authors:
 routes:
   rest_proxy:
     type: rest
-    path: ^\/(?<resource>[a-z\/]+)(\.(?<format>[a-z]+))?$
+    pattern: ^\/(?<resource>[a-z\/]+)(\.(?<format>[a-z]+))?$
     method: GET
     prefix: /rest
     controller: Finwo\RestProxy:Rest:get

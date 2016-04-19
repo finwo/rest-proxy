@@ -4,6 +4,7 @@ namespace Finwo\Framework;
 
 use Finwo\PropertyAccessor\PropertyAccessor;
 use Invoker\Invoker;
+use OAuth2\Exception;
 
 class Application
 {
@@ -66,6 +67,7 @@ class Application
                 $loader->loadFile($file)
             );
         }
+
         $this->container->set('config', $config);
 
         // Transform routes into route objects, for easy usage
@@ -122,7 +124,6 @@ class Application
         }
 
         // Check if we match any known routes
-        $routes = $this->container->get('config.routes');
         /** @var Route $route */
         $route = @array_shift(array_filter($this->container->get('config.routes'), function(Route $route) {
             return $route->match();
@@ -134,6 +135,9 @@ class Application
         if (!is_null($route)) {
             // Fetch callable for the route
             list($controller, $method) = $this->routeToCallable($route);
+        } else {
+            // Find something based upon the request uri
+            die('Not Implemented');
         }
 
         // Create the controller object
